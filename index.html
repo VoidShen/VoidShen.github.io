@@ -3,10 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的博客</title>
+    <title>IT应用下载页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .link-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .link-button:hover {
+            background-color: #0056b3;
+        }
+        .link-button.secondary {
+            background-color: #28a745;
+        }
+        .link-button.secondary:hover {
+            background-color: #1e7e34;
+        }
+    </style>
 </head>
 <body>
-    <h1>欢迎来到我的博客</h1>
-    <p>这是我的个人博客网站。</p>
+    <div class="container">
+        <h1>好想来&吖嘀吖嘀</h1>
+        <p>内部专用下载链接：</p>
+        <a href="https://douyin.jxydyd.com:30443/upload/test/YD_Client.exe" class="link-button">下载 YD_Client</a>
+        <a href="https://douyin.jxydyd.com:30443/upload/test/xtz.exe" class="link-button">下载 小兔子</a>
+        <a href="https://douyin.jxydyd.com:30443/upload/test/xiaofei.apk" class="link-button secondary">下载 小飞</a>
+    </div>
 </body>
 </html>
