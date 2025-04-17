@@ -3,41 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的个人博客</title>
+    <title>SJS的技术博客</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <h1>欢迎来到我的博客</h1>
-        <p>分享技术，记录生活</p>
-        <button class="theme-switch" onclick="toggleDarkMode()">切换主题</button>
+        <h1>SJS的技术博客</h1>
+        <p>探索技术的无限可能，分享编程的乐趣</p>
+        <button class="theme-switch" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
     </header>
 
     <nav>
         <ul>
             <li><a href="#home">首页</a></li>
-            <li><a href="#blog">博客</a></li>
+            <li><a href="#blog">博客文章</a></li>
+            <li><a href="#projects">开源项目</a></li>
+            <li><a href="#skills">技术栈</a></li>
             <li><a href="#about">关于我</a></li>
             <li><a href="#contact">联系方式</a></li>
         </ul>
     </nav>
 
-    <div class="container" id="blog">
-        <article class="post">
-            <h2>示例博客文章</h2>
-            <div class="post-meta">发布于 2024年1月1日</div>
-            <p>这是一篇示例博客文章。你可以在这里添加你的博客内容。</p>
-        </article>
+    <div class="container">
+        <section id="home" class="section">
+            <div class="profile-card">
+                <img src="assets/images/avatar.jpg" alt="个人头像" class="avatar">
+                <h2>你好，我是 SJS</h2>
+                <p class="subtitle">全栈开发工程师 | 开源爱好者</p>
+                <div class="social-links">
+                    <a href="https://github.com/SJS240154" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="mailto:your.email@example.com"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </section>
 
-        <article class="post">
-            <h2>另一篇博客文章</h2>
-            <div class="post-meta">发布于 2023年12月31日</div>
-            <p>这是另一篇示例博客文章。你可以继续添加更多的文章。</p>
-        </article>
+        <section id="blog" class="section">
+            <h2 class="section-title">最新博客</h2>
+            <article class="post">
+                <h2>Python自动化测试实践</h2>
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> 2024年1月15日</span>
+                    <span><i class="fas fa-tag"></i> Python, 测试</span>
+                </div>
+                <p>在本文中，我将分享如何使用 Python 进行自动化测试，包括单元测试、集成测试和性能测试的最佳实践...</p>
+                <a href="#" class="read-more">阅读更多</a>
+            </article>
+
+            <article class="post">
+                <h2>深入理解Git工作流</h2>
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> 2024年1月10日</span>
+                    <span><i class="fas fa-tag"></i> Git, 版本控制</span>
+                </div>
+                <p>Git是现代软件开发中不可或缺的工具，本文将详细介绍Git的工作流程，包括分支管理、合并策略等...</p>
+                <a href="#" class="read-more">阅读更多</a>
+            </article>
+        </section>
+
+        <section id="projects" class="section">
+            <h2 class="section-title">开源项目</h2>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>项目名称 1</h3>
+                    <p>项目描述：这是一个基于Python的Web应用...</p>
+                    <div class="tech-stack">
+                        <span>Python</span>
+                        <span>Django</span>
+                        <span>PostgreSQL</span>
+                    </div>
+                    <a href="#" class="project-link">查看项目</a>
+                </div>
+                <!-- 可以添加更多项目卡片 -->
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <h2 class="section-title">技术栈</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3>前端开发</h3>
+                    <div class="skill-items">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
+                        <span>React</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>后端开发</h3>
+                    <div class="skill-items">
+                        <span>Python</span>
+                        <span>Node.js</span>
+                        <span>Java</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <p>我是一名热爱技术的开发者，专注于Web开发和人工智能领域。平时喜欢研究新技术，参与开源项目，同时也热衷于技术分享和写作。</p>
+                <div class="experience">
+                    <h3>工作经历</h3>
+                    <ul>
+                        <li>2023-至今：XXX公司 - 全栈开发工程师</li>
+                        <li>2021-2023：XXX科技 - 后端开发工程师</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <h2 class="section-title">联系我</h2>
+            <div class="contact-form">
+                <form id="contact-form">
+                    <input type="text" placeholder="您的姓名" required>
+                    <input type="email" placeholder="您的邮箱" required>
+                    <textarea placeholder="您的留言" required></textarea>
+                    <button type="submit">发送消息</button>
+                </form>
+            </div>
+        </section>
     </div>
 
     <footer>
-        <p>&copy; 2024 我的个人博客. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>站点地图</h3>
+                <a href="#home">首页</a>
+                <a href="#blog">博客</a>
+                <a href="#projects">项目</a>
+            </div>
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <p>Email: your.email@example.com</p>
+                <p>GitHub: @SJS240154</p>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2024 SJS的技术博客. All rights reserved.</p>
     </footer>
     
     <script src="assets/js/main.js"></script>
