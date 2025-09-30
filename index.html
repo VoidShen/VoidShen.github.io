@@ -1,149 +1,571 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BL的技术博客</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>智能上下班倒计时</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.8em;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #fff;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00ffff, 0 0 20px #00ffff;
+            }
+
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+            }
+        }
+
+        .time-display {
+            font-size: 5em;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            animation: shake 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(-2px);
+            }
+
+            100% {
+                transform: translateX(2px);
+            }
+        }
+
+        .message {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px #fff;
+            color: #00ffff;
+        }
+
+        /* 设置按钮样式 */
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .settings-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 30px #00ffff;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #ff00ff;
+        }
+
+        .close-btn:hover {
+            color: #ff0000;
+        }
+
+        .time-input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .time-input-group label {
+            font-size: 1.2em;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            margin: 0 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            text-align: center;
+            outline: none;
+            width: 80px;
+        }
+
+        input[type="number"]:focus {
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: black;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            margin: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px #00ffff;
+        }
+
+        .finished {
+            animation: pulse 0.5s infinite, explode 1s forwards;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes explode {
+            0% {
+                text-shadow: 0 0 10px #00ffff;
+            }
+
+            100% {
+                text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000, 0 0 50px #ff0000;
+            }
+        }
+
+        /* 粒子效果 */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(0, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            to {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 数字跳动效果 */
+        .digit {
+            display: inline-block;
+            position: relative;
+        }
+
+        .digit::before {
+            content: attr(data-old);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            animation: flip 0.3s ease-in-out;
+        }
+
+        @keyframes flip {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+        }
+
+        .config-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-align: center;
+        }
+
+        /* 成功提示弹窗 */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-content {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 30px #00ff00;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            animation: successPulse 1s infinite;
+        }
+
+        @keyframes successPulse {
+            0% {
+                box-shadow: 0 0 10px #00ff00;
+            }
+
+            50% {
+                box-shadow: 0 0 30px #00ff00;
+            }
+
+            100% {
+                box-shadow: 0 0 10px #00ff00;
+            }
+        }
+
+        .success-icon {
+            font-size: 4em;
+            color: #00ff00;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            font-size: 1.5em;
+            color: #00ff00;
+            font-family: 'Orbitron', sans-serif;
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <h1>BL的技术博客</h1>
-        <p>探索技术的无限可能，分享编程的乐趣</p>
-        <button class="theme-switch" onclick="toggleDarkMode()">
-            <i class="fas fa-moon"></i>
-        </button>
-    </header>
+    <!-- 粒子背景 -->
+    <div class="particles" id="particles"></div>
 
-    <nav>
-        <ul>
-            <li><a href="#home">首页</a></li>
-            <li><a href="#blog">博客文章</a></li>
-            <li><a href="#projects">开源项目</a></li>
-            <li><a href="#skills">技术栈</a></li>
-            <li><a href="#about">关于我</a></li>
-            <li><a href="#contact">联系方式</a></li>
-        </ul>
-    </nav>
+    <!-- 设置按钮 -->
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
 
-    <div class="container">
-        <section id="home" class="section">
-            <div class="profile-card">
-                <img src="assets/images/avatar.jpg" alt="个人头像" class="avatar">
-                <h2>你好，我是 SJS</h2>
-                <p class="subtitle">全栈开发工程师 | 开源爱好者</p>
-                <div class="social-links">
-                    <a href="https://github.com/SJS240154" target="_blank"><i class="fab fa-github"></i></a>
-                    <a href="mailto:your.email@example.com"><i class="fas fa-envelope"></i></a>
-                </div>
+    <!-- 设置弹窗 -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSettings()">&times;</span>
+            <div class="config-title">设置工作时间</div>
+            <div class="time-input-group">
+                <label for="workStartHour">上班时间:</label>
+                <input type="number" id="workStartHour" min="0" max="23" value="9"> :
+                <input type="number" id="workStartMinute" min="0" max="59" value="0">
             </div>
-        </section>
-
-        <section id="blog" class="section">
-            <h2 class="section-title">最新博客</h2>
-            <article class="post">
-                <h2>Python自动化测试实践</h2>
-                <div class="post-meta">
-                    <span><i class="far fa-calendar"></i> 2024年1月15日</span>
-                    <span><i class="fas fa-tag"></i> Python, 测试</span>
-                </div>
-                <p>在本文中，我将分享如何使用 Python 进行自动化测试，包括单元测试、集成测试和性能测试的最佳实践...</p>
-                <a href="#" class="read-more">阅读更多</a>
-            </article>
-
-            <article class="post">
-                <h2>深入理解Git工作流</h2>
-                <div class="post-meta">
-                    <span><i class="far fa-calendar"></i> 2024年1月10日</span>
-                    <span><i class="fas fa-tag"></i> Git, 版本控制</span>
-                </div>
-                <p>Git是现代软件开发中不可或缺的工具，本文将详细介绍Git的工作流程，包括分支管理、合并策略等...</p>
-                <a href="#" class="read-more">阅读更多</a>
-            </article>
-        </section>
-
-        <section id="projects" class="section">
-            <h2 class="section-title">开源项目</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <h3>项目名称 1</h3>
-                    <p>项目描述：这是一个基于Python的Web应用...</p>
-                    <div class="tech-stack">
-                        <span>Python</span>
-                        <span>Django</span>
-                        <span>PostgreSQL</span>
-                    </div>
-                    <a href="#" class="project-link">查看项目</a>
-                </div>
-                <!-- 可以添加更多项目卡片 -->
+            <div class="time-input-group">
+                <label for="workEndHour">下班时间:</label>
+                <input type="number" id="workEndHour" min="0" max="23" value="18"> :
+                <input type="number" id="workEndMinute" min="0" max="59" value="0">
             </div>
-        </section>
-
-        <section id="skills" class="section">
-            <h2 class="section-title">技术栈</h2>
-            <div class="skills-container">
-                <div class="skill-category">
-                    <h3>前端开发</h3>
-                    <div class="skill-items">
-                        <span>HTML5</span>
-                        <span>CSS3</span>
-                        <span>JavaScript</span>
-                        <span>React</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3>后端开发</h3>
-                    <div class="skill-items">
-                        <span>Python</span>
-                        <span>Node.js</span>
-                        <span>Java</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="section">
-            <h2 class="section-title">关于我</h2>
-            <div class="about-content">
-                <p>我是一名热爱技术的开发者，专注于Web开发和人工智能领域。平时喜欢研究新技术，参与开源项目，同时也热衷于技术分享和写作。</p>
-                <div class="experience">
-                    <h3>工作经历</h3>
-                    <ul>
-                        <li>2023-至今：XXX公司 - 全栈开发工程师</li>
-                        <li>2021-2023：XXX科技 - 后端开发工程师</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <h2 class="section-title">联系我</h2>
-            <div class="contact-form">
-                <form id="contact-form">
-                    <input type="text" placeholder="您的姓名" required>
-                    <input type="email" placeholder="您的邮箱" required>
-                    <textarea placeholder="您的留言" required></textarea>
-                    <button type="submit">发送消息</button>
-                </form>
-            </div>
-            <p class="copyright">&copy; 2025 SJS的技术博客. All rights reserved.</p>
-        </section>
-    </div>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>站点地图</h3>
-                <a href="#home">首页</a>
-            </div>
-            <div class="footer-section">
-                <h3>联系方式</h3>
-                <a>GitHub: @SJS240154</a>
+            <div>
+                <button onclick="setWorkTime()">保存设置</button>
+                <button onclick="loadConfig()">加载当前设置</button>
             </div>
         </div>
-    </footer>
-    
-    <script src="assets/js/main.js"></script>
+    </div>
+
+    <!-- 成功提示弹窗 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">✓</div>
+            <div class="success-message" id="successMessage">设置保存成功!</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>智能倒计时</h1>
+        <div class="message" id="message">距离下班还有:</div>
+        <div class="time-display" id="countdown">--:--:--</div>
+    </div>
+
+    <script>
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // 随机位置
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const size = Math.random() * 5 + 2;
+                const animationDuration = Math.random() * 20 + 10;
+                const animationDelay = Math.random() * 5;
+                const hue = Math.random() * 360;
+
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDuration = `${animationDuration}s`;
+                particle.style.animationDelay = `${animationDelay}s`;
+                particle.style.background = `hsla(${hue}, 100%, 70%, 0.7)`;
+                particle.style.boxShadow = `0 0 10px hsla(${hue}, 100%, 50%, 0.8)`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 上一个显示的时间（用于动画效果）
+        let lastTime = "";
+
+        // 打开设置弹窗
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+            loadConfig();
+        }
+
+        // 关闭设置弹窗
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        // 显示成功提示
+        function showSuccess(message) {
+            document.getElementById('successMessage').textContent = message;
+            document.getElementById('successModal').style.display = 'flex';
+
+            // 2秒后自动关闭
+            setTimeout(function () {
+                document.getElementById('successModal').style.display = 'none';
+            }, 2000);
+        }
+
+        // 点击弹窗外部关闭弹窗
+        window.onclick = function (event) {
+            const settingsModal = document.getElementById('settingsModal');
+            const successModal = document.getElementById('successModal');
+
+            if (event.target == settingsModal) {
+                closeSettings();
+            } else if (event.target == successModal) {
+                successModal.style.display = 'none';
+            }
+        }
+
+        // 更新倒计时
+        function updateCountdown() {
+            fetch('/api/countdown')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.finished) {
+                        document.getElementById('countdown').textContent = '时间到了!';
+                        document.getElementById('countdown').className = 'time-display finished';
+                        document.getElementById('message').textContent = '🎉 时间到了! 🎉';
+                    } else {
+                        document.getElementById('message').textContent = data.message;
+                        const timeString = data.formatted;
+
+                        // 添加数字跳动效果
+                        if (lastTime !== timeString) {
+                            const countdownElement = document.getElementById('countdown');
+                            const digits = timeString.split('');
+                            let html = '';
+
+                            for (let i = 0; i < digits.length; i++) {
+                                if (digits[i] === ':') {
+                                    html += '<span>:</span>';
+                                } else {
+                                    html += `<span class="digit">${digits[i]}</span>`;
+                                }
+                            }
+
+                            countdownElement.innerHTML = html;
+                            lastTime = timeString;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching countdown:', error);
+                });
+        }
+
+        // 设置工作时间
+        function setWorkTime() {
+            const startHour = document.getElementById('workStartHour').value;
+            const startMinute = document.getElementById('workStartMinute').value;
+            const endHour = document.getElementById('workEndHour').value;
+            const endMinute = document.getElementById('workEndMinute').value;
+
+            fetch('/api/set_work_time', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    start_hour: parseInt(startHour),
+                    start_minute: parseInt(startMinute),
+                    end_hour: parseInt(endHour),
+                    end_minute: parseInt(endMinute)
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 使用自定义成功提示弹窗
+                    showSuccess(data.message);
+                    // 重新加载倒计时
+                    updateCountdown();
+                    // 关闭设置弹窗
+                    closeSettings();
+                })
+                .catch(error => {
+                    console.error('Error setting work time:', error);
+                    showSuccess('设置失败');
+                });
+        }
+
+        // 加载当前配置
+        function loadConfig() {
+            fetch('/api/get_config')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('workStartHour').value = data.work_start_hour;
+                    document.getElementById('workStartMinute').value = data.work_start_minute;
+                    document.getElementById('workEndHour').value = data.work_end_hour;
+                    document.getElementById('workEndMinute').value = data.work_end_minute;
+                })
+                .catch(error => {
+                    console.error('Error loading config:', error);
+                });
+        }
+
+        // 页面加载完成后创建粒子并初始化
+        window.addEventListener('load', function () {
+            createParticles();
+        });
+
+        // 每秒更新一次倒计时
+        setInterval(updateCountdown, 1000);
+
+        // 初始化
+        updateCountdown();
+    </script>
 </body>
+
 </html>
