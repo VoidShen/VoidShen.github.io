@@ -402,6 +402,12 @@
     </div>
 
     <script>
+        // 默认工作时间配置 (存储在localStorage中)
+        const DEFAULT_WORK_START_HOUR = 9;
+        const DEFAULT_WORK_START_MINUTE = 0;
+        const DEFAULT_WORK_END_HOUR = 18;
+        const DEFAULT_WORK_END_MINUTE = 0;
+
         // 创建粒子效果
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -471,39 +477,88 @@
 
         // 更新倒计时
         function updateCountdown() {
-            fetch('/api/countdown')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.finished) {
-                        document.getElementById('countdown').textContent = '时间到了!';
-                        document.getElementById('countdown').className = 'time-display finished';
-                        document.getElementById('message').textContent = '🎉 时间到了! 🎉';
-                    } else {
-                        document.getElementById('message').textContent = data.message;
-                        const timeString = data.formatted;
+            // 获取当前时间
+            const now = new Date();
+            
+            // 获取工作时间配置
+            const config = getConfig();
+            const workStartHour = config.work_start_hour;
+            const workStartMinute = config.work_start_minute;
+            const workEndHour = config.work_end_hour;
+            const workEndMinute = config.work_end_minute;
+            
+            // 创建今天的工作开始和结束时间
+            const workStart = new Date(now);
+            workStart.setHours(workStartHour, workStartMinute, 0, 0);
+            
+            const workEnd = new Date(now);
+            workEnd.setHours(workEndHour, workEndMinute, 0, 0);
+            
+            let timeDiff, message, finished = false;
+            
+            // 判断当前时间阶段
+            if (now < workStart) {
+                // 上班前
+                timeDiff = workStart - now;
+                message = "距离上班还有:";
+            } else if (now >= workStart && now < workEnd) {
+                // 工作中
+                timeDiff = workEnd - now;
+                message = "距离下班还有:";
+            } else {
+                // 下班后
+                finished = true;
+                message = "🎉 时间到了! 🎉";
+            }
+            
+            if (finished) {
+                document.getElementById('countdown').textContent = '时间到了!';
+                document.getElementById('countdown').className = 'time-display finished';
+                document.getElementById('message').textContent = message;
+            } else {
+                // 计算小时、分钟、秒
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                
+                const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                document.getElementById('message').textContent = message;
+                
+                // 添加数字跳动效果
+                if (lastTime !== timeString) {
+                    const countdownElement = document.getElementById('countdown');
+                    const digits = timeString.split('');
+                    let html = '';
 
-                        // 添加数字跳动效果
-                        if (lastTime !== timeString) {
-                            const countdownElement = document.getElementById('countdown');
-                            const digits = timeString.split('');
-                            let html = '';
-
-                            for (let i = 0; i < digits.length; i++) {
-                                if (digits[i] === ':') {
-                                    html += '<span>:</span>';
-                                } else {
-                                    html += `<span class="digit">${digits[i]}</span>`;
-                                }
-                            }
-
-                            countdownElement.innerHTML = html;
-                            lastTime = timeString;
+                    for (let i = 0; i < digits.length; i++) {
+                        if (digits[i] === ':') {
+                            html += '<span>:</span>';
+                        } else {
+                            html += `<span class="digit">${digits[i]}</span>`;
                         }
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching countdown:', error);
-                });
+
+                    countdownElement.innerHTML = html;
+                    lastTime = timeString;
+                }
+            }
+        }
+
+        // 获取配置信息
+        function getConfig() {
+            const configStr = localStorage.getItem('workTimeConfig');
+            if (configStr) {
+                return JSON.parse(configStr);
+            } else {
+                // 返回默认配置
+                return {
+                    work_start_hour: DEFAULT_WORK_START_HOUR,
+                    work_start_minute: DEFAULT_WORK_START_MINUTE,
+                    work_end_hour: DEFAULT_WORK_END_HOUR,
+                    work_end_minute: DEFAULT_WORK_END_MINUTE
+                };
+            }
         }
 
         // 设置工作时间
@@ -513,46 +568,31 @@
             const endHour = document.getElementById('workEndHour').value;
             const endMinute = document.getElementById('workEndMinute').value;
 
-            fetch('/api/set_work_time', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    start_hour: parseInt(startHour),
-                    start_minute: parseInt(startMinute),
-                    end_hour: parseInt(endHour),
-                    end_minute: parseInt(endMinute)
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // 使用自定义成功提示弹窗
-                    showSuccess(data.message);
-                    // 重新加载倒计时
-                    updateCountdown();
-                    // 关闭设置弹窗
-                    closeSettings();
-                })
-                .catch(error => {
-                    console.error('Error setting work time:', error);
-                    showSuccess('设置失败');
-                });
+            // 保存到localStorage
+            const config = {
+                work_start_hour: parseInt(startHour),
+                work_start_minute: parseInt(startMinute),
+                work_end_hour: parseInt(endHour),
+                work_end_minute: parseInt(endMinute)
+            };
+            
+            localStorage.setItem('workTimeConfig', JSON.stringify(config));
+            
+            // 使用自定义成功提示弹窗
+            showSuccess("设置保存成功!");
+            // 重新加载倒计时
+            updateCountdown();
+            // 关闭设置弹窗
+            closeSettings();
         }
 
         // 加载当前配置
         function loadConfig() {
-            fetch('/api/get_config')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('workStartHour').value = data.work_start_hour;
-                    document.getElementById('workStartMinute').value = data.work_start_minute;
-                    document.getElementById('workEndHour').value = data.work_end_hour;
-                    document.getElementById('workEndMinute').value = data.work_end_minute;
-                })
-                .catch(error => {
-                    console.error('Error loading config:', error);
-                });
+            const config = getConfig();
+            document.getElementById('workStartHour').value = config.work_start_hour;
+            document.getElementById('workStartMinute').value = config.work_start_minute;
+            document.getElementById('workEndHour').value = config.work_end_hour;
+            document.getElementById('workEndMinute').value = config.work_end_minute;
         }
 
         // 页面加载完成后创建粒子并初始化
