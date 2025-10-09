@@ -11,19 +11,29 @@
 </head>
 
 <body>
-    <!-- 八卦图背景 -->
-    <div id="bagua-wrapper">
-      <div id="bagua-container">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div id="bagua-description">
-        道可道，非常道
-      </div>
+    <!-- 主容器 -->
+    <div class="main-container">
+        <div id="bagua-wrapper">
+            <div id="bagua-container">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div id="bagua-description">
+                道可道，非常道
+            </div>
+            <!-- 倒计时放在八卦图中央 -->
+            <div class="countdown-overlay">
+                <div class="container">
+                    <h1>智能倒计时</h1>
+                    <div class="message" id="message">距离下班还有:</div>
+                    <div class="time-display" id="countdown">--:--:--</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 粒子背景 -->
@@ -64,12 +74,6 @@
             <div class="success-icon">✓</div>
             <div class="success-message" id="successMessage">设置保存成功!</div>
         </div>
-    </div>
-
-    <div class="container">
-        <h1>智能倒计时</h1>
-        <div class="message" id="message">距离下班还有:</div>
-        <div class="time-display" id="countdown">--:--:--</div>
     </div>
 
     <script src="assets/js/countdown.js"></script>
