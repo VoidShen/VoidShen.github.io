@@ -30,13 +30,13 @@ body {
 }
 
 #bagua-container {
-    width: 400px;
-    height: 400px;
+    width: 450px; /* 增大默认尺寸 */
+    height: 450px; /* 增大默认尺寸 */
     border-radius: 50%;
     position: relative;
     overflow: hidden;
     animation: rotateBagua 10s linear infinite;
-    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75); /* 增强阴影效果 */
     z-index: 0;
     display: flex;
     justify-content: center;
@@ -45,8 +45,8 @@ body {
 
 @media (max-width: 500px) {
     #bagua-container {
-        width: 200px;
-        height: 200px;
+        width: 250px; /* 调整小屏幕尺寸 */
+        height: 250px; /* 调整小屏幕尺寸 */
     }
 }
 
@@ -177,13 +177,13 @@ body {
 
 .container {
     text-align: center;
-    background: rgba(0, 0, 0, 0.5); /* 半透明背景 */
-    padding: 20px;
+    background: rgba(0, 0, 0, 0.6); /* 调整背景透明度 */
+    padding: 25px; /* 增加内边距 */
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 80%;
-    max-width: 300px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6); /* 增强阴影效果 */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* 调整边框 */
+    width: 85%; /* 调整宽度 */
+    max-width: 350px; /* 增大最大宽度 */
 }
 
 h1 {
@@ -208,12 +208,12 @@ h1 {
 }
 
 .time-display {
-    font-size: 2em;
+    font-size: 2.5em; /* 增大默认字体 */
     font-weight: bold;
-    margin: 15px 0;
-    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    margin: 20px 0; /* 增加间距 */
+    text-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff; /* 增强阴影效果 */
     font-family: 'Orbitron', sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: 3px; /* 增加字符间距 */
     background: linear-gradient(to right, #00ffff, #ff00ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -224,8 +224,8 @@ h1 {
 }
 
 .message {
-    font-size: 1em;
-    margin-bottom: 15px;
+    font-size: 1.2em; /* 增大默认字体 */
+    margin-bottom: 20px; /* 增加间距 */
     font-family: 'Orbitron', sans-serif;
     text-shadow: 0 0 5px #fff;
     color: #00ffff;
@@ -527,40 +527,41 @@ button:hover {
     }
     
     .time-display {
-        font-size: 1.5em;
+        font-size: 1.8em; /* 增大字体 */
     }
     
     .message {
-        font-size: 0.9em;
+        font-size: 1em; /* 增大字体 */
     }
 }
 
 @media (max-width: 480px) {
     #bagua-container {
-        width: 200px;
-        height: 200px;
+        width: 250px; /* 增大尺寸 */
+        height: 250px; /* 增大尺寸 */
     }
     
     .container {
         width: 80%;
-        padding: 10px;
-        max-width: 200px;
+        padding: 15px; /* 增加内边距 */
+        max-width: 220px; /* 增大最大宽度 */
     }
     
     h1 {
-        font-size: 1em;
+        font-size: 1.3em; /* 增大字体 */
     }
     
     .time-display {
-        font-size: 1.2em;
+        font-size: 2em; /* 显著增大字体 */
+        letter-spacing: 3px; /* 增加字符间距 */
     }
     
     .message {
-        font-size: 0.8em;
+        font-size: 1.1em; /* 增大字体 */
     }
     
     #bagua-description {
         font-size: 1em;
-        padding: 5px 10px;
+        padding: 8px 15px; /* 增加内边距 */
     }
 }
